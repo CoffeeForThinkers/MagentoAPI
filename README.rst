@@ -1,0 +1,1 @@
+ma/resources/README.rst
