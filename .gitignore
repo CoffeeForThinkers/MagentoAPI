@@ -1,1 +1,7 @@
 /.Python
+/dist/
+/magento_adapter.egg-info/
+/lib/
+/bin/
+/include/
+/pip-selfcheck.json

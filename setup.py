@@ -16,7 +16,7 @@ with open(os.path.join(_APP_PATH, 'resources', 'requirements.txt')) as f:
 print(_APP_PATH)
 
 setuptools.setup(
-      name='magento_api',
+      name='magento_adapter',
       version=ma.__version__,
       description="Magento API interfaces",
       long_description=_LONG_DESCRIPTION,
