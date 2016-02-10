@@ -1,8 +1,13 @@
-## Description
+-----------
+Description
+-----------
 
 This project provides interfaces that connect to Magento via its SOAP v1 XML-RPC interface.
 
-## Configuration
+
+-------------
+Configuration
+-------------
 
 The following environment variables must be defined:
 

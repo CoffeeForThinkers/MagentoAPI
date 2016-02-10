@@ -13,30 +13,28 @@ with open(os.path.join(_APP_PATH, 'resources', 'README.rst')) as f:
 with open(os.path.join(_APP_PATH, 'resources', 'requirements.txt')) as f:
       _INSTALL_REQUIRES = list(map(lambda s: s.strip(), f))
 
-print(_APP_PATH)
-
 setuptools.setup(
-      name='magento_adapter',
-      version=ma.__version__,
-      description="Magento API interfaces",
-      long_description=_LONG_DESCRIPTION,
-      classifiers=[],
-      keywords='',
-      author='Dustin Oprea',
-      author_email='dustin@randomingenuity.com',
-      url='https://github.com/dsoprea/MagentoAPI',
-      license='GPL',
-      packages=setuptools.find_packages(exclude=['dev']),
-      include_package_data=True,
-      zip_safe=False,
-      install_requires=_INSTALL_REQUIRES,
-      package_data={
+    name='magento_adapter',
+    version=ma.__version__,
+    description="Magento API interfaces",
+    long_description=_LONG_DESCRIPTION,
+    classifiers=[],
+    keywords='',
+    author='Dustin Oprea',
+    author_email='dustin@randomingenuity.com',
+    url='https://github.com/CoffeeForThinkers/MagentoAPI',
+    license='GPL3',
+    packages=setuptools.find_packages(exclude=['dev']),
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=_INSTALL_REQUIRES,
+    package_data={
         'ma': [
             'resources/README.rst',
             'resources/requirements.txt',
         ],
-      },
-      scripts=[
-            'ma/resources/scripts/ma_help',
-      ],
+    },
+    scripts=[
+        'ma/resources/scripts/ma_help',
+    ],
 )
