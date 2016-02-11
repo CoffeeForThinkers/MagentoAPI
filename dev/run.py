@@ -12,6 +12,7 @@ import ma.api.catalog_product_attribute
 import ma.api.catalog_product_attribute_media
 import ma.api.catalog_product_tag
 import ma.api.cataloginventory_stock_item
+import ma.api.catalog_product_type
 import ma.utility
 
 def _sales_order_invoice():
@@ -61,7 +62,8 @@ def _magento():
 
 def _catalog_product_attribute_set():
     cpas = ma.api.catalog_product_attribute_set.CatalogProductAttributeSetApi()
-    l = cpas_.get_list()
+    l = cpas.get_list()
+    l = list(l)
 
     return l
 
@@ -90,16 +92,23 @@ def _cataloginventory_stock_item():
 
     return l
 
+def _catalog_product_type():
+    cpt = ma.api.catalog_product_type.CatalogProductTypeApi()
+    l = cpt.get_list()
+
+    return l
+
 if __name__ == '__main__':
 #    r = _catalog_category()
 #    r = _catalog_product()
 #    r = _store()
 #    r = _magento()
 #    r = _sales()
-#    r = _catalog_product_attribute_set()
+    r = _catalog_product_attribute_set()
 #    r = _catalog_product_attribute()
 #    r = _catalog_product_attribute_media()
 #    r = _catalog_product_tag()
-    r = _cataloginventory_stock_item()
+#    r = _cataloginventory_stock_item()
+#    r = _catalog_product_type()
 
     ma.utility.pretty_print(r)
