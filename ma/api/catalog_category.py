@@ -27,11 +27,6 @@ class CatalogCategoryApi(ma.api.base_class.Api):
         r = self.magento.catalog_category.assignProduct(category_id, product_sku)
         assert r == True, "Could not assign (by SKU)"
 
-    def get_tree(self, parent_id=None):
-        args = []
-        kwargs = {}
-        if parent_id is not None:
-            kwargs['parentCategory'] = parent_id
-
-        t = self.magento.catalog_category.level(*args, **kwargs)
+    def get_tree(self, parent_id=1):
+        t = self.magento.catalog_category.tree()
         return t

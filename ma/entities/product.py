@@ -39,24 +39,6 @@ def build_catalog_product_create_entity(*args, **kwargs):
 
     # Add any validation here.
 
-    assert \
-        issubclass(
-            t.tier_price.__class__, 
-            CATALOG_PRODUCT_TIER_PRICE_ENTITY) is True, \
-        "tier_price is not the right type."
-
-    assert \
-        issubclass(
-            t.additional_attributes.__class__, 
-            CATALOG_PRODUCT_ADDITIONAL_ATTRIBUTES_ENTITY) is True, \
-        "additional_attributes is not the right type."
-
-    assert \
-        issubclass(
-            t.stock_data.__class__, 
-            CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY) is True, \
-        "stock_data is not the right type."
-    
     return t
 
 CATALOG_PRODUCT_TIER_PRICE_ENTITY = \

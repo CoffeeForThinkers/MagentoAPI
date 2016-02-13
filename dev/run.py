@@ -27,6 +27,8 @@ def _catalog_category():
     cc = ma.api.catalog_category.CatalogCategoryApi()
 #    r = c.info(1)
 
+    return cc.get_tree()
+
 #    product_id = 295
     product_sku = 'wbk013'
     category_id = 1
@@ -99,12 +101,12 @@ def _catalog_product_type():
     return l
 
 if __name__ == '__main__':
-#    r = _catalog_category()
+    r = _catalog_category()
 #    r = _catalog_product()
 #    r = _store()
 #    r = _magento()
 #    r = _sales()
-    r = _catalog_product_attribute_set()
+#    r = _catalog_product_attribute_set()
 #    r = _catalog_product_attribute()
 #    r = _catalog_product_attribute_media()
 #    r = _catalog_product_tag()

@@ -36,19 +36,15 @@ class CatalogProductApi(ma.api.base_class.Api):
         return l
 
     def create_product(self, product_type, attribute_set_id, sku, 
-                       product_data):
-        assert \
-            issubclass(
-                product_data.__class__, 
-                ma.entities.product.CATALOG_PRODUCT_CREATE_ENTITY) is True, \
-            "Product creation entity is not the right type."
-
+                       catalog_product_create_entity):
         product_id = \
             self.magento.catalog_product.create(
                 product_type, 
                 attribute_set_id, 
                 sku, 
-                product_data)
+                catalog_product_create_entity)
+
+        product_id = int(product_id)
 
         _LOGGER.info("Created product with ID (%d).", product_id)
 
