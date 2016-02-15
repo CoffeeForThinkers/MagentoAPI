@@ -3,6 +3,7 @@ import collections
 
 import ma.api.base_class
 import ma.entities.product
+import ma.utility
 
 _LOGGER = logging.getLogger()
 
@@ -37,12 +38,16 @@ class CatalogProductApi(ma.api.base_class.Api):
 
     def create_product(self, product_type, attribute_set_id, sku, 
                        catalog_product_create_entity):
+        cpce_dict = \
+            ma.utility.get_dict_from_named_tuple(
+                catalog_product_create_entity)
+
         product_id = \
             self.magento.catalog_product.create(
                 product_type, 
                 attribute_set_id, 
                 sku, 
-                catalog_product_create_entity)
+                cpce_dict)
 
         product_id = int(product_id)
 
