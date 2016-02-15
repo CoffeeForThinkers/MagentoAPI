@@ -1,5 +1,6 @@
 /.Python
 /dist/
+/build/
 /magento_adapter.egg-info/
 /lib/
 /bin/
