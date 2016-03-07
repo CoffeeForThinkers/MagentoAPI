@@ -29,7 +29,6 @@ CATALOG_PRODUCT_CREATE_ENTITY = \
             'custom_design',
             'custom_layout_update',
             'options_container',
-            'additional_attributes',
             'stock_data',
         ])
 
@@ -58,21 +57,6 @@ def catalog_product_tier_price_entity(*args, **kwargs):
 
     return t
 
-CATALOG_PRODUCT_ADDITIONAL_ATTRIBUTES_ENTITY = \
-    collections.namedtuple(
-        'CATALOG_PRODUCT_TIER_PRICE_ENTITY', [
-            'multi_data',
-            'single_data',
-        ])
-
-def catalog_product_additional_attributes_entity(*args, **kwargs):
-
-    t = CATALOG_PRODUCT_ADDITIONAL_ATTRIBUTES_ENTITY(*args, **kwargs)
-
-    # Add any validation here.
-
-    return t
-
 CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY = \
     collections.namedtuple(
         'CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY', [
@@ -96,6 +80,42 @@ CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY = \
 def catalog_inventory_stock_item_update_entity(*args, **kwargs):
 
     t = CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY(*args, **kwargs)
+
+    # Add any validation here.
+
+    return t
+
+CATALOG_PRODUCT_IMAGE_FILE_ENTITY = \
+    collections.namedtuple(
+        'CATALOG_PRODUCT_IMAGE_FILE_ENTITY', [
+            'content',
+            'mime',
+            'name',
+        ])
+
+def catalog_product_image_file_entity(*args, **kwargs):
+
+    t = CATALOG_PRODUCT_IMAGE_FILE_ENTITY(*args, **kwargs)
+
+    # Add any validation here.
+
+    return t
+
+
+CATALOG_PRODUCT_ATTRIBUTE_MEDIA_CREATE_ENTITY = \
+    collections.namedtuple(
+        'CATALOG_PRODUCT_ATTRIBUTE_MEDIA_CREATE_ENTITY', [
+            'file',
+            'label',
+            'position',
+            'types',
+            'exclude',
+            'remove',
+        ])
+
+def catalog_product_attribute_media_create_entity(*args, **kwargs):
+
+    t = CATALOG_PRODUCT_ATTRIBUTE_MEDIA_CREATE_ENTITY(*args, **kwargs)
 
     # Add any validation here.
 
