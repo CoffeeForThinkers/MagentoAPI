@@ -5,7 +5,7 @@ import ma.api.base_class
 import ma.entities.product
 import ma.utility
 
-_LOGGER = logging.getLogger()
+_LOGGER = logging.getLogger(__name__)
 
 
 class CatalogProductApi(ma.api.base_class.Api):
@@ -36,21 +36,75 @@ class CatalogProductApi(ma.api.base_class.Api):
         l = self.magento.catalog_product.list(filters)
         return l
 
-    def create_product(self, product_type, attribute_set_id, sku, 
-                       catalog_product_create_entity):
+    def create_simple_product(
+            self, attribute_set_id, sku, catalog_product_create_entity, 
+            attributes={}):
         cpce_dict = \
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
 
+        cpce_dict['additional_attributes'] = { 
+            'single_data': [
+                { 'key': k, 'value': v }
+                for (k, v) 
+                in attributes.items()
+            ],
+        }
+
+        (c, sid) = self.soap2
+
+        arguments = [
+            'simple', 
+            str(attribute_set_id), 
+            sku, 
+            cpce_dict,
+        ]
+
+        ma.utility.pretty_print(arguments)
+
+        product_id = c.catalogProductCreate(*([sid] + arguments))
+        product_id = int(product_id)
+
+        _LOGGER.info("Created SIMPLE product with ID (%d).", product_id)
+
+        return product_id
+
+    def create_configurable_product(
+            self, attribute_set_id, sku, name, short_description, 
+            website_id_list, description=None, price=0.00):
+        """
+        Logic based on:
+
+        http://netzkollektiv.com/blog/add-configurable-products-via-soapxml-rpc
+        """
+
+        if description is None:
+            description = short_description
+
+        cpce_dict = {
+            'name': name,
+            'description': description,
+            'short_description': short_description,
+            'websites': website_id_list,
+            'price': price,
+        }
+
         product_id = \
             self.magento.catalog_product.create(
-                product_type, 
+                'configurable', 
                 attribute_set_id, 
                 sku, 
                 cpce_dict)
 
         product_id = int(product_id)
 
-        _LOGGER.info("Created product with ID (%d).", product_id)
+        _LOGGER.info("Created CONFIGURABLE product with ID (%d).", product_id)
 
         return product_id
+
+    def list_of_additional_attributes(self, product_type, attribute_set_id):
+        rows = self.magento.catalog_product.listOfAdditionalAttributes(
+                product_type, 
+                attribute_set_id)
+
+        return { int(r['attribute_id']): r for r in rows }

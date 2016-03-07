@@ -18,8 +18,10 @@ class ImageAcquisitionFailError(Exception):
 
 
 class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
-    def __init__(self, image_url_template):
+    def __init__(self, image_url_template, *args, **kwargs):
         self.__image_url_template = image_url_template
+
+        super(CatalogProductAttributeMediaApi, self).__init__(*args, **kwargs)
 
     def get_list_with_product_id(self, product_id):
         l = self.magento.catalog_product_attribute_media.list(product_id)

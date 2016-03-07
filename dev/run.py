@@ -2,6 +2,8 @@
 
 import datetime
 
+import ma.config.log
+
 import ma.api.catalog_category
 import ma.api.catalog_product
 import ma.api.core_store
@@ -13,6 +15,7 @@ import ma.api.catalog_product_attribute_media
 import ma.api.catalog_product_tag
 import ma.api.cataloginventory_stock_item
 import ma.api.catalog_product_type
+import ma.api.base_class
 import ma.utility
 
 def _sales_order_invoice():
@@ -48,6 +51,8 @@ def _catalog_product():
 #    r = p.info_with_sku('wsd017')
     r = cp.get_list()#([19])
 
+#    r = cp.list_of_additional_attributes('simple', 4);
+
     return r
 
 def _core_store():
@@ -71,7 +76,7 @@ def _catalog_product_attribute_set():
 
 def _catalog_product_attribute():
     cpa = ma.api.catalog_product_attribute.CatalogProductAttributeApi()
-    l = cpa.get_list(18)
+    l = cpa.get_list(22)
 
     return l
 
@@ -101,16 +106,21 @@ def _catalog_product_type():
     return l
 
 if __name__ == '__main__':
-    r = _catalog_category()
+    ma.config.log.configure(True)
+
+#    r = _catalog_category()
 #    r = _catalog_product()
 #    r = _store()
 #    r = _magento()
 #    r = _sales()
 #    r = _catalog_product_attribute_set()
-#    r = _catalog_product_attribute()
+    r = _catalog_product_attribute()
 #    r = _catalog_product_attribute_media()
 #    r = _catalog_product_tag()
 #    r = _cataloginventory_stock_item()
 #    r = _catalog_product_type()
 
     ma.utility.pretty_print(r)
+
+#    a = ma.api.base_class.Api()
+#    a.soap('catalogProductCreate')
