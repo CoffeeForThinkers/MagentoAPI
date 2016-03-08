@@ -43,13 +43,26 @@ class CatalogProductApi(ma.api.base_class.Api):
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
 
-        cpce_dict['additional_attributes'] = { 
-            'single_data': [
-                { 'key': k, 'value': v }
-                for (k, v) 
-                in attributes.items()
-            ],
+        # Inject attributes.
+
+        aa = { 
+            'single_data': [],
+            'multi_data': [],
         }
+
+        for k, v in attributes.items():
+            if issubclass(v.__class__, list) is True:
+                parent_name = 'multi_data'
+                v = ','.join([str(atom) for atom in v])
+            else:
+                parent_name = 'single_data'
+
+            aa[parent_name].append({ 'key': k, 'value': v })
+
+        cpce_dict['additional_attributes'] = aa
+
+        # We need to use SOAP2 for this call. XML-RPC (and probably SOAP1) will 
+        # ignore them.
 
         arguments = [
             'simple', 
@@ -58,12 +71,8 @@ class CatalogProductApi(ma.api.base_class.Api):
             cpce_dict,
         ]
 
-# SOAP2
         (c, sid) = self.soap2
         product_id = c.catalogProductCreate(*([sid] + arguments))
-# XML-RPC
-#        product_id = self.magento.catalog_product.create(*arguments)
-        product_id = int(product_id)
 
         _LOGGER.info("Created SIMPLE product with ID (%d).", product_id)
 
