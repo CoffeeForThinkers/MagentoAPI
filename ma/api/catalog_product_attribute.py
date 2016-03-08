@@ -7,5 +7,14 @@ _LOGGER = logging.getLogger()
 
 class CatalogProductAttributeApi(ma.api.base_class.Api):
     def get_list(self, attribute_set_id):
-        l = self.magento.catalog_product_attribute.list(attribute_set_id)
-        return l
+        rows = self.magento.catalog_product_attribute.list(attribute_set_id)
+        return rows
+
+    def get_info(self, attribute_id):
+        row = self.magento.catalog_product_attribute.info(attribute_id)
+        return row
+
+    def get_options(self, attribute_id):
+        rows = self.magento.catalog_product_attribute.options(attribute_id)
+# TODO(dustin): If each row's value is always an integer, convert it.
+        return rows

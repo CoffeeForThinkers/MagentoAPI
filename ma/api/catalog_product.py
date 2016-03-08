@@ -51,8 +51,6 @@ class CatalogProductApi(ma.api.base_class.Api):
             ],
         }
 
-        (c, sid) = self.soap2
-
         arguments = [
             'simple', 
             str(attribute_set_id), 
@@ -60,9 +58,11 @@ class CatalogProductApi(ma.api.base_class.Api):
             cpce_dict,
         ]
 
-        ma.utility.pretty_print(arguments)
-
+# SOAP2
+        (c, sid) = self.soap2
         product_id = c.catalogProductCreate(*([sid] + arguments))
+# XML-RPC
+#        product_id = self.magento.catalog_product.create(*arguments)
         product_id = int(product_id)
 
         _LOGGER.info("Created SIMPLE product with ID (%d).", product_id)
