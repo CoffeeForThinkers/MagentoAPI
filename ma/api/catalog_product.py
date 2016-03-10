@@ -33,8 +33,10 @@ class CatalogProductApi(ma.api.base_class.Api):
 #        if categories:
 #            filters['category_id'] = { 'eq': '10' }#in': ','.join([str(c) for c in categories]) }
 
-        l = self.magento.catalog_product.list(filters)
-        return l
+        records = self.magento.catalog_product.list(filters)
+        for record in records:
+            record['product_id'] = int(record['product_id'])
+            yield record
 
     def create_simple_product(
             self, attribute_set_id, sku, catalog_product_create_entity, 
@@ -80,7 +82,7 @@ class CatalogProductApi(ma.api.base_class.Api):
 
     def create_configurable_product(
             self, attribute_set_id, sku, name, short_description, 
-            website_id_list, description=None, price=0.00):
+            website_id_list, description=None):
         """
         Logic based on:
 
@@ -95,21 +97,48 @@ class CatalogProductApi(ma.api.base_class.Api):
             'description': description,
             'short_description': short_description,
             'websites': website_id_list,
-            'price': price,
+            'price': 0.0,
         }
 
-        product_id = \
-            self.magento.catalog_product.create(
-                'configurable', 
-                attribute_set_id, 
-                sku, 
-                cpce_dict)
+        arguments = [
+            'configurable', 
+            str(attribute_set_id), 
+            sku, 
+            cpce_dict,
+        ]
 
-        product_id = int(product_id)
+        (c, sid) = self.soap2
+        product_id = c.catalogProductCreate(*([sid] + arguments))
 
         _LOGGER.info("Created CONFIGURABLE product with ID (%d).", product_id)
 
         return product_id
+
+    def assign_simple_product_to_configurable_product(
+            self, configurable_product_id, simple_sku_list, attribute_codes, 
+            attribute_labels, pricing_list):
+        """`attribute_codes`: A list of attribute codes to group configuration on.
+        
+        `attributes_labels`: A dictionary of labels for the attribute codes.
+        
+        `pricing` is a dictionary keyed by all of the values for all of the 
+        attributes that we're grouping by. Yes, there will be collisions if any 
+        observed values between any of the grouped attributes happen to match.
+        """
+
+        _LOGGER.debug("Assigning simple products to configurable with ID "
+                      "(%d): %s", configurable_product_id, simple_sku_list)
+
+        arguments = [
+            configurable_product_id,
+            simple_sku_list,
+            attribute_codes,
+            attribute_labels,
+            pricing_list,
+        ]
+
+        (c, sid) = self.soap2
+        c.catalogProductTypeConfigurableAssign(*([sid] + arguments))
 
     def list_of_additional_attributes(self, product_type, attribute_set_id):
         rows = self.magento.catalog_product.listOfAdditionalAttributes(
