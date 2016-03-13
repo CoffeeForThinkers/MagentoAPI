@@ -81,24 +81,16 @@ class CatalogProductApi(ma.api.base_class.Api):
         return product_id
 
     def create_configurable_product(
-            self, attribute_set_id, sku, name, short_description, 
-            website_id_list, description=None):
+            self, attribute_set_id, sku, catalog_product_create_entity):
         """
         Logic based on:
 
         http://netzkollektiv.com/blog/add-configurable-products-via-soapxml-rpc
         """
 
-        if description is None:
-            description = short_description
-
-        cpce_dict = {
-            'name': name,
-            'description': description,
-            'short_description': short_description,
-            'websites': website_id_list,
-            'price': 0.0,
-        }
+        cpce_dict = \
+            ma.utility.get_dict_from_named_tuple(
+                catalog_product_create_entity)
 
         arguments = [
             'configurable', 
