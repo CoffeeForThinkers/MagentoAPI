@@ -38,15 +38,7 @@ class CatalogProductApi(ma.api.base_class.Api):
             record['product_id'] = int(record['product_id'])
             yield record
 
-    def create_simple_product_with_sku(
-            self, attribute_set_id, sku, catalog_product_create_entity, 
-            attributes={}):
-        cpce_dict = \
-            ma.utility.get_dict_from_named_tuple(
-                catalog_product_create_entity)
-
-        # Inject attributes.
-
+    def __inject_attributes(self, cpce_dict, attributes):
         aa = { 
             'single_data': [],
             'multi_data': [],
@@ -62,6 +54,15 @@ class CatalogProductApi(ma.api.base_class.Api):
             aa[parent_name].append({ 'key': k, 'value': v })
 
         cpce_dict['additional_attributes'] = aa
+
+    def create_simple_product_with_sku(
+            self, attribute_set_id, sku, catalog_product_create_entity, 
+            attributes={}):
+        cpce_dict = \
+            ma.utility.get_dict_from_named_tuple(
+                catalog_product_create_entity)
+
+        self.__inject_attributes(cpce_dict, attributes)
 
         # We need to use SOAP2 for this call. XML-RPC (and probably SOAP1) will 
         # ignore them.
@@ -86,23 +87,7 @@ class CatalogProductApi(ma.api.base_class.Api):
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
 
-        # Inject attributes.
-
-        aa = { 
-            'single_data': [],
-            'multi_data': [],
-        }
-
-        for k, v in attributes.items():
-            if issubclass(v.__class__, list) is True:
-                parent_name = 'multi_data'
-                v = ','.join([str(atom) for atom in v])
-            else:
-                parent_name = 'single_data'
-
-            aa[parent_name].append({ 'key': k, 'value': v })
-
-        cpce_dict['additional_attributes'] = aa
+        self.__inject_attributes(cpce_dict, attributes)
 
         # We need to use SOAP2 for this call. XML-RPC (and probably SOAP1) will 
         # ignore them.
@@ -120,10 +105,13 @@ class CatalogProductApi(ma.api.base_class.Api):
         _LOGGER.info("Updated SIMPLE product with [%s]? [%s]", sku, was_updated)
 
     def create_configurable_product_with_sku(
-            self, attribute_set_id, sku, catalog_product_create_entity):
+            self, attribute_set_id, sku, catalog_product_create_entity, 
+            attributes={}):
         cpce_dict = \
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
+
+        self.__inject_attributes(cpce_dict, attributes)
 
         arguments = [
             'configurable', 
@@ -189,3 +177,9 @@ class CatalogProductApi(ma.api.base_class.Api):
                 attribute_set_id)
 
         return { int(r['attribute_id']): r for r in rows }
+
+    def delete_with_sku(self, sku):
+        was_deleted = \
+            self.magento.catalog_product.delete(sku)
+
+        return was_deleted
