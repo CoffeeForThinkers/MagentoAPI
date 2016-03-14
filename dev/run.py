@@ -95,7 +95,8 @@ def _catalog_product_tag():
 def _cataloginventory_stock_item():
     csi = ma.api.cataloginventory_stock_item.CatalogInventoryStockItemApi()
 #    l = csi.get_list_with_ids([405, 231, 232, 999])
-    l = csi.get_list_with_ids([405, 231, 232])
+#    l = csi.get_list_with_ids([405, 231, 232])
+    l = csi.get_list_with_skus([])
 
     return l
 
@@ -114,10 +115,10 @@ if __name__ == '__main__':
 #    r = _magento()
 #    r = _sales()
 #    r = _catalog_product_attribute_set()
-    r = _catalog_product_attribute()
+#    r = _catalog_product_attribute()
 #    r = _catalog_product_attribute_media()
 #    r = _catalog_product_tag()
-#    r = _cataloginventory_stock_item()
+    r = _cataloginventory_stock_item()
 #    r = _catalog_product_type()
 
     ma.utility.pretty_print(r)

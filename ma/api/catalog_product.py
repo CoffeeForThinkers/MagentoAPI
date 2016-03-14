@@ -38,7 +38,7 @@ class CatalogProductApi(ma.api.base_class.Api):
             record['product_id'] = int(record['product_id'])
             yield record
 
-    def create_simple_product(
+    def create_simple_product_with_sku(
             self, attribute_set_id, sku, catalog_product_create_entity, 
             attributes={}):
         cpce_dict = \
@@ -80,14 +80,47 @@ class CatalogProductApi(ma.api.base_class.Api):
 
         return product_id
 
-    def create_configurable_product(
+    def update_simple_product_with_sku(
+            self, sku, catalog_product_create_entity, attributes={}):
+        cpce_dict = \
+            ma.utility.get_dict_from_named_tuple(
+                catalog_product_create_entity)
+
+        # Inject attributes.
+
+        aa = { 
+            'single_data': [],
+            'multi_data': [],
+        }
+
+        for k, v in attributes.items():
+            if issubclass(v.__class__, list) is True:
+                parent_name = 'multi_data'
+                v = ','.join([str(atom) for atom in v])
+            else:
+                parent_name = 'single_data'
+
+            aa[parent_name].append({ 'key': k, 'value': v })
+
+        cpce_dict['additional_attributes'] = aa
+
+        # We need to use SOAP2 for this call. XML-RPC (and probably SOAP1) will 
+        # ignore them.
+
+        arguments = [
+            sku, 
+            cpce_dict,
+            '',
+            'sku',
+        ]
+
+        (c, sid) = self.soap2
+        was_updated = c.catalogProductUpdate(*([sid] + arguments))
+
+        _LOGGER.info("Updated SIMPLE product with [%s]? [%s]", sku, was_updated)
+
+    def create_configurable_product_with_sku(
             self, attribute_set_id, sku, catalog_product_create_entity):
-        """
-        Logic based on:
-
-        http://netzkollektiv.com/blog/add-configurable-products-via-soapxml-rpc
-        """
-
         cpce_dict = \
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
@@ -105,6 +138,24 @@ class CatalogProductApi(ma.api.base_class.Api):
         _LOGGER.info("Created CONFIGURABLE product with ID (%d).", product_id)
 
         return product_id
+
+    def update_configurable_product_with_sku(
+            self, sku, catalog_product_create_entity):
+        cpce_dict = \
+            ma.utility.get_dict_from_named_tuple(
+                catalog_product_create_entity)
+
+        arguments = [
+            sku, 
+            cpce_dict,
+            '',
+            'sku',
+        ]
+
+        (c, sid) = self.soap2
+        was_updated = c.catalogProductUpdate(*([sid] + arguments))
+
+        _LOGGER.info("Updated CONFIGURABLE product with [%s]? [%s]", sku, was_updated)
 
     def assign_simple_product_to_configurable_product(
             self, configurable_product_id, simple_sku_list, attribute_codes, 
