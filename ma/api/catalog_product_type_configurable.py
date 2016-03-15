@@ -5,7 +5,7 @@ import ma.api.base_class
 import ma.entities.product
 import ma.utility
 
-_LOGGER = logging.getLogger()
+_LOGGER = logging.getLogger(__name__)
 
 
 class CatalogProductTypeConfigurableApi(ma.api.base_class.Api):

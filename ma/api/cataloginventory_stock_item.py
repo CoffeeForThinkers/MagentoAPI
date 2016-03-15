@@ -2,7 +2,7 @@ import logging
 
 import ma.api.base_class
 
-_LOGGER = logging.getLogger()
+_LOGGER = logging.getLogger(__name__)
 
 
 class CatalogInventoryStockItemApi(ma.api.base_class.Api):

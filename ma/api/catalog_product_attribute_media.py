@@ -10,7 +10,7 @@ import ma.entities.product
 import ma.api.base_class
 import ma.utility
 
-_LOGGER = logging.getLogger()
+_LOGGER = logging.getLogger(__name__)
 
 
 class ImageAcquisitionFailError(Exception):
@@ -74,7 +74,7 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
         len_ = len(local_uri_prefix)
         if url[:len_].lower() == local_uri_prefix:
             filepath = url[len_:]
-            _LOGGER.info("Reading image [%s] from local: [%s]", rel_filepath, filepath)
+#            _LOGGER.info("Reading image [%s] from local: [%s]", rel_filepath, filepath)
 
             try:
                 with open(filepath, 'rb') as f:
@@ -85,7 +85,7 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
             if data is None:
                 raise ImageAcquisitionFailError("Could not copy image: [{0}]".format(filepath))
         else:
-            _LOGGER.info("Downloading product image [%s]: [%s]", rel_filepath, url)
+#            _LOGGER.info("Downloading product image [%s]: [%s]", rel_filepath, url)
 
             r = requests.get(url=url, stream=True)
             
@@ -129,6 +129,9 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
         additional use-cases later.
         """
 
+        _LOGGER.info("Uploading image [%s] for product with ID [%d].", 
+                     rel_filepath, product_id)
+
         cpife = self.__build_image_entity(rel_filepath)
         cpife_dict = ma.utility.get_dict_from_named_tuple(cpife)
 
@@ -136,9 +139,6 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
 #        position = 100
         position = 0
         
-        _LOGGER.info("Uploading image [%s] for product with ID [%d].", 
-                     rel_filepath, product_id)
-
         do_exclude = False
         do_remove = False
 
