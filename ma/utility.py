@@ -1,11 +1,14 @@
 import json
 
-def pretty_print(results):
-    print(json.dumps(
+def get_pretty_print(results):
+    return json.dumps(
             results, 
             sort_keys=True,
             indent=4, 
-            separators=(',', ': ')))
+            separators=(',', ': '))
+
+def pretty_print(results):
+    print(get_pretty_print(results))
 
 def get_dict_from_named_tuple(nt):
     a = dir(nt)
