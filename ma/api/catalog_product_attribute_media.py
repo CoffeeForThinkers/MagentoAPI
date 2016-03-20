@@ -18,7 +18,7 @@ class ImageAcquisitionFailError(Exception):
 
 
 class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
-    def __init__(self, image_url_template, *args, **kwargs):
+    def __init__(self, image_url_template=None, *args, **kwargs):
         self.__image_url_template = image_url_template
 
         super(CatalogProductAttributeMediaApi, self).__init__(*args, **kwargs)
@@ -160,3 +160,6 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
                 cpamce_dict)
 
         return upload_rel_filepath
+
+    def get_list_with_sku(self, sku):
+        return self.magento.catalog_product_attribute_media.list(sku, '', 'sku')
