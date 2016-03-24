@@ -1,6 +1,7 @@
 import logging
 import hashlib
 import base64
+import os.path
 
 logging.getLogger('requests').setLevel(logging.WARNING)
 import requests
@@ -18,7 +19,7 @@ class ImageAcquisitionFailError(Exception):
 
 
 class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
-    def __init__(self, image_url_template, *args, **kwargs):
+    def __init__(self, image_url_template=None, *args, **kwargs):
         self.__image_url_template = image_url_template
 
         super(CatalogProductAttributeMediaApi, self).__init__(*args, **kwargs)
@@ -74,6 +75,11 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
         len_ = len(local_uri_prefix)
         if url[:len_].lower() == local_uri_prefix:
             filepath = url[len_:]
+            path = os.path.dirname(filepath)
+            assert \
+                os.path.exists(path) is True, \
+                "Local image download path does not exist: " + path
+
 #            _LOGGER.info("Reading image [%s] from local: [%s]", rel_filepath, filepath)
 
             try:
@@ -160,3 +166,6 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
                 cpamce_dict)
 
         return upload_rel_filepath
+
+    def get_list_with_sku(self, sku):
+        return self.magento.list(sku)
