@@ -182,6 +182,6 @@ class CatalogProductApi(ma.api.base_class.Api):
 
     def delete_with_sku(self, sku):
         was_deleted = \
-            self.magento.catalog_product.delete(sku)
+            self.magento.catalog_product.delete(sku, 'sku')
 
         return was_deleted

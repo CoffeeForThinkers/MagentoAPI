@@ -168,4 +168,4 @@ class CatalogProductAttributeMediaApi(ma.api.base_class.Api):
         return upload_rel_filepath
 
     def get_list_with_sku(self, sku):
-        return self.magento.list(sku)
+        return self.magento.catalog_product_attribute_media.list(sku, '', 'sku')
