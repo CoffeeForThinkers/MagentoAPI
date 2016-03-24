@@ -128,10 +128,12 @@ class CatalogProductApi(ma.api.base_class.Api):
         return product_id
 
     def update_configurable_product_with_sku(
-            self, sku, catalog_product_create_entity):
+            self, sku, catalog_product_create_entity, attributes):
         cpce_dict = \
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
+
+        self.__inject_attributes(cpce_dict, attributes)
 
         arguments = [
             sku, 
