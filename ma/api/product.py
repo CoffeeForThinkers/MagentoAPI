@@ -102,8 +102,6 @@ class ProductApi(ma.api.base_class.Api):
         (c, sid) = self.soap2
         was_updated = c.catalogProductUpdate(*([sid] + arguments))
 
-        _LOGGER.info("Updated SIMPLE product with [%s]? [%s]", sku, was_updated)
-
     def create_configurable_product_with_sku(
             self, attribute_set_id, sku, catalog_product_create_entity, 
             attributes={}):
