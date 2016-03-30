@@ -5,7 +5,7 @@ import ma.api.base_class
 _LOGGER = logging.getLogger(__name__)
 
 
-class CatalogInventoryStockItemApi(ma.api.base_class.Api):
+class StockApi(ma.api.base_class.Api):
     def get_list_with_ids(self, product_ids, do_allow_missing=False):
         assert product_ids, "Please a nonempty list of product-IDs."
 

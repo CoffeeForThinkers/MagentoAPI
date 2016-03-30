@@ -5,7 +5,7 @@ import ma.api.base_class
 _LOGGER = logging.getLogger(__name__)
 
 
-class CatalogCategoryApi(ma.api.base_class.Api):
+class CategoryApi(ma.api.base_class.Api):
     def get_info(self, category_id):
         i = self.magento.catalog_category.info(category_id)
 

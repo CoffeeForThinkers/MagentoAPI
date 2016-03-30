@@ -6,7 +6,7 @@ import ma.api.base_class
 _LOGGER = logging.getLogger(__name__)
 
 
-class SalesOrderInvoiceApi(ma.api.base_class.Api):
+class OrderApi(ma.api.base_class.Api):
     def get_transactions(self, from_timestamp, to_timestamp):
         format = ma.constants.TIMESTAMP_FORMAT_1
 
