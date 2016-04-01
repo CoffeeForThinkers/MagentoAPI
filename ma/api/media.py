@@ -128,7 +128,8 @@ class MediaApi(ma.api.base_class.Api):
 
         return cpife
 
-    def create(self, product_id, rel_filepath, label_text, for_types):
+    def create(self, product_id, rel_filepath, label_text, for_types, 
+               position=0):
         """This "create" call also supports removing and, apparently, multiple 
         files of different types, but the parameters are in conflict with each 
         other and generally don't make sense. We can add different methods for 
@@ -141,10 +142,6 @@ class MediaApi(ma.api.base_class.Api):
         cpife = self.__build_image_entity(rel_filepath)
         cpife_dict = ma.utility.get_dict_from_named_tuple(cpife)
 
-# TODO(dustin): What are these? What are the choices?
-#        position = 100
-        position = 0
-        
         do_exclude = False
         do_remove = False
 
@@ -167,5 +164,5 @@ class MediaApi(ma.api.base_class.Api):
 
         return upload_rel_filepath
 
-    def get_list_with_sku(self, sku):
-        return self.magento.catalog_product_attribute_media.list(sku, '', 'sku')
+    def remove_with_sku(self, sku, rel_filepath):
+        return self.magento.catalog_product_attribute_media.remove(sku, rel_filepath, 'sku')
