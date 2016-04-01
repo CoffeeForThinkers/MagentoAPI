@@ -4,17 +4,19 @@ import datetime
 
 import ma.config.log
 
-import ma.api.catalog_category
-import ma.api.catalog_product
-import ma.api.core_store
-import ma.api.magento_info
-import ma.api.sales_order_invoice
-import ma.api.catalog_product_attribute_set
-import ma.api.catalog_product_attribute
-import ma.api.catalog_product_attribute_media
-import ma.api.catalog_product_tag
-import ma.api.cataloginventory_stock_item
-import ma.api.catalog_product_type
+#import ma.api.catalog_category
+#import ma.api.catalog_product
+#import ma.api.core_store
+#import ma.api.magento_info
+#import ma.api.sales_order_invoice
+#import ma.api.catalog_product_attribute_set
+#import ma.api.catalog_product_attribute
+#import ma.api.catalog_product_attribute_media
+#import ma.api.catalog_product_tag
+#import ma.api.cataloginventory_stock_item
+#import ma.api.catalog_product_type
+import ma.api.media
+
 import ma.api.base_class
 import ma.utility
 
@@ -81,8 +83,8 @@ def _catalog_product_attribute():
     return l
 
 def _catalog_product_attribute_media():
-    cpam = ma.api.catalog_product_attribute_media.CatalogProductAttributeMediaApi()
-    l = cpam.get_list_with_product_id(234)
+    cpam = ma.api.media.MediaApi()
+    l = cpam.get_list_with_product_id(12434)
 
     return l
 
@@ -116,9 +118,9 @@ if __name__ == '__main__':
 #    r = _sales()
 #    r = _catalog_product_attribute_set()
 #    r = _catalog_product_attribute()
-#    r = _catalog_product_attribute_media()
+    r = _catalog_product_attribute_media()
 #    r = _catalog_product_tag()
-    r = _cataloginventory_stock_item()
+#    r = _cataloginventory_stock_item()
 #    r = _catalog_product_type()
 
     ma.utility.pretty_print(r)
