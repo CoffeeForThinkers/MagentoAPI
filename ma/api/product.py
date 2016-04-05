@@ -44,6 +44,9 @@ class ProductApi(ma.api.base_class.Api):
             'multi_data': [],
         }
 
+        _LOGGER.debug("Injecting attributes:\n%s", 
+                      ma.utility.get_pretty_json(attributes))
+
         for k, v in attributes.items():
             if issubclass(v.__class__, list) is True:
                 parent_name = 'multi_data'
@@ -52,6 +55,10 @@ class ProductApi(ma.api.base_class.Api):
                 parent_name = 'single_data'
 
             aa[parent_name].append({ 'key': k, 'value': v })
+
+
+        _LOGGER.debug("Final injected attributes:\n%s", 
+                      ma.utility.get_pretty_json(aa))
 
         cpce_dict['additional_attributes'] = aa
 
