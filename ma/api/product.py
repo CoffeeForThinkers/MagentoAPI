@@ -100,7 +100,7 @@ class ProductApi(ma.api.base_class.Api):
         ]
 
         (c, sid) = self.soap2
-        was_updated = c.catalogProductUpdate(*([sid] + arguments))
+        c.catalogProductUpdate(*([sid] + arguments))
 
     def create_configurable_product_with_sku(
             self, attribute_set_id, sku, catalog_product_create_entity, 
@@ -141,9 +141,7 @@ class ProductApi(ma.api.base_class.Api):
         ]
 
         (c, sid) = self.soap2
-        was_updated = c.catalogProductUpdate(*([sid] + arguments))
-
-        _LOGGER.info("Updated CONFIGURABLE product with [%s]? [%s]", sku, was_updated)
+        c.catalogProductUpdate(*([sid] + arguments))
 
     def list_of_additional_attributes(self, product_type, attribute_set_id):
         rows = self.magento.catalog_product.listOfAdditionalAttributes(
