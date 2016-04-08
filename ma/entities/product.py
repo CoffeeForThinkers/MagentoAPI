@@ -49,7 +49,7 @@ CATALOG_PRODUCT_TIER_PRICE_ENTITY = \
             'price',
         ])
 
-def catalog_product_tier_price_entity(*args, **kwargs):
+def build_catalog_product_tier_price_entity(*args, **kwargs):
 
     t = CATALOG_PRODUCT_TIER_PRICE_ENTITY(*args, **kwargs)
 
@@ -77,7 +77,7 @@ CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY = \
             'use_config_notify_stock_qty',
         ])
 
-def catalog_inventory_stock_item_update_entity(*args, **kwargs):
+def build_catalog_inventory_stock_item_update_entity(*args, **kwargs):
 
     t = CATALOG_INVENTORY_STOCK_ITEM_UPDATE_ENTITY(*args, **kwargs)
 
@@ -93,7 +93,7 @@ CATALOG_PRODUCT_IMAGE_FILE_ENTITY = \
             'name',
         ])
 
-def catalog_product_image_file_entity(*args, **kwargs):
+def build_catalog_product_image_file_entity(*args, **kwargs):
 
     t = CATALOG_PRODUCT_IMAGE_FILE_ENTITY(*args, **kwargs)
 
@@ -113,9 +113,29 @@ CATALOG_PRODUCT_ATTRIBUTE_MEDIA_CREATE_ENTITY = \
             'remove',
         ])
 
-def catalog_product_attribute_media_create_entity(*args, **kwargs):
+def build_catalog_product_attribute_media_create_entity(*args, **kwargs):
 
     t = CATALOG_PRODUCT_ATTRIBUTE_MEDIA_CREATE_ENTITY(*args, **kwargs)
+
+    # Add any validation here.
+
+    return t
+
+CATALOG_PRODUCT_ENTITY = \
+    collections.namedtuple(
+        'CATALOG_PRODUCT_ENTITY', [
+            'product_id',
+            'sku',
+            'name',
+            'set',
+            'type',
+            'category_ids',
+            'website_ids',
+        ])
+
+def build_catalog_product_entity(*args, **kwargs):
+
+    t = CATALOG_PRODUCT_ENTITY(*args, **kwargs)
 
     # Add any validation here.
 

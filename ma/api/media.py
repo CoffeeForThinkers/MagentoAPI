@@ -120,7 +120,7 @@ class MediaApi(ma.api.base_class.Api):
         image_data_encoded = base64.b64encode(image_data)
 
         cpife = \
-            ma.entities.product.catalog_product_image_file_entity(
+            ma.entities.product.build_catalog_product_image_file_entity(
                     content=image_data_encoded,
                     mime=mime_type,
                     name=filename,
@@ -146,7 +146,7 @@ class MediaApi(ma.api.base_class.Api):
         do_remove = False
 
         cpamce = \
-            ma.entities.product.catalog_product_attribute_media_create_entity(
+            ma.entities.product.build_catalog_product_attribute_media_create_entity(
                     file=cpife_dict,
                     label=label_text,
                     position=str(position),

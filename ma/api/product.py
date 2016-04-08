@@ -58,6 +58,8 @@ class ProductApi(ma.api.base_class.Api):
     def create_simple_product_with_sku(
             self, attribute_set_id, sku, catalog_product_create_entity, 
             attributes={}):
+        type_ = 'simple'
+
         cpce_dict = \
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
@@ -68,7 +70,7 @@ class ProductApi(ma.api.base_class.Api):
         # ignore them.
 
         arguments = [
-            'simple', 
+            type_, 
             str(attribute_set_id), 
             sku, 
             cpce_dict,
@@ -79,7 +81,14 @@ class ProductApi(ma.api.base_class.Api):
 
         _LOGGER.info("Created SIMPLE product with ID (%d).", product_id)
 
-        return product_id
+        cpe = self.translate_create_entity_dict_to_list_entity(
+                cpce_dict,
+                sku=sku,
+                product_id=product_id,
+                set=attribute_set_id,
+                type=type_)
+
+        return cpe
 
     def update_simple_product_with_sku(
             self, sku, catalog_product_create_entity, attributes={}):
@@ -105,6 +114,8 @@ class ProductApi(ma.api.base_class.Api):
     def create_configurable_product_with_sku(
             self, attribute_set_id, sku, catalog_product_create_entity, 
             attributes={}):
+        type_ = 'configurable'
+
         cpce_dict = \
             ma.utility.get_dict_from_named_tuple(
                 catalog_product_create_entity)
@@ -112,7 +123,7 @@ class ProductApi(ma.api.base_class.Api):
         self.__inject_attributes(cpce_dict, attributes)
 
         arguments = [
-            'configurable', 
+            type_, 
             str(attribute_set_id), 
             sku, 
             cpce_dict,
@@ -123,7 +134,14 @@ class ProductApi(ma.api.base_class.Api):
 
         _LOGGER.info("Created CONFIGURABLE product with ID (%d).", product_id)
 
-        return product_id
+        cpe = self.translate_create_entity_dict_to_list_entity(
+                cpce_dict,
+                sku=sku,
+                product_id=product_id,
+                set=attribute_set_id,
+                type=type_)
+
+        return cpe
 
     def update_configurable_product_with_sku(
             self, sku, catalog_product_create_entity, attributes):
@@ -163,3 +181,11 @@ class ProductApi(ma.api.base_class.Api):
     def get_type_list(self):
         l = self.magento.catalog_product_type.list()
         return l
+
+    def translate_create_entity_dict_to_list_entity(self, cpce_dict, **kwargs):
+        # The following have to be provided: sku, product_id, set, type
+        return ma.entities.product.build_catalog_product_entity(
+                name=cpce_dict['name'],
+                category_ids=cpce_dict['categories'],
+                website_ids=cpce_dict['websites'],
+                **kwargs)
