@@ -39,12 +39,14 @@ class CategoryApi(ma.api.base_class.Api):
         is_deleted = self.magento.catalog_category.delete(category_id)
         return is_deleted
 
-    def disable(self, category_id):
+    def update_active_status(self, category_id, is_active=True):
         # magento requires sorting values to be passed
-        is_disabled = self.magento.catalog_category.update(
+        is_updated = self.magento.catalog_category.update(
             category_id,
-            {'is_active': '0', 'available_sort_by': 'position', 'default_sort_by': 'position'})
-        return is_disabled
+            { 'is_active': str(int(is_active)),
+              'available_sort_by': 'position',
+              'default_sort_by': 'position' })
+        return is_updated
 
     def get_tree(self, parent_id=1):
         t = self.magento.catalog_category.tree()
