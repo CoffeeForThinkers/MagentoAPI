@@ -43,7 +43,7 @@ class CategoryApi(ma.api.base_class.Api):
         # magento requires sorting values to be passed
         is_updated = self.magento.catalog_category.update(
             category_id,
-            { 'is_active': '1' if is_active else '0',
+            { 'is_active': str(int(is_active)),
               'available_sort_by': 'position',
               'default_sort_by': 'position' })
         return is_updated
