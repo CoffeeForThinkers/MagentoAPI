@@ -1,4 +1,4 @@
-class MissingUtilityHashError(Exception):
+class MissingSecurityTokenError(Exception):
     def __init__(self, source):
-        message = "No utility hash present, cannot execute. Context: [{}]".format(source)
-        Exception.__init__(self, message)
+        message = "No Magento security token present, cannot execute. Context: [{}]".format(source)
+        super(MissingSecurityTokenError, self).__init__(message)
