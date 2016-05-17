@@ -164,9 +164,5 @@ class MediaApi(ma.api.base_class.Api):
 
         return upload_rel_filepath
 
-    def update(self, product_id, rel_filepath, label_text, for_types,
-               position=0):
-        pass
-
     def remove_with_sku(self, sku, rel_filepath):
         return self.magento.catalog_product_attribute_media.remove(sku, rel_filepath, 'sku')
