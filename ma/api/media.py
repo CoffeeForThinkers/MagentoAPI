@@ -56,7 +56,7 @@ class MediaApi(ma.api.base_class.Api):
 
     def get_list_with_product_sku(self, product_sku):
 # NOTE(dustin): This is currently the same request as _id(), but we want to
-#               keep the calls separate just in case Magento finally gets their 
+#               keep the calls separate just in case Magento finally gets their
 #               act together.
         l = self.magento.catalog_product_attribute_media.list(product_sku)
         return l
@@ -94,7 +94,7 @@ class MediaApi(ma.api.base_class.Api):
 #            _LOGGER.info("Downloading product image [%s]: [%s]", rel_filepath, url)
 
             r = requests.get(url=url, stream=True)
-            
+
             try:
                 r.raise_for_status()
             except requests.exceptions.HTTPError as e:
@@ -114,7 +114,7 @@ class MediaApi(ma.api.base_class.Api):
         mime_type = \
             ma.config.general.FILE_EXTENSION_TO_MIMETYPE_MAPPING[extension]
 
-        # We translate what might potentially be file-paths into an opaque 
+        # We translate what might potentially be file-paths into an opaque
         # string.
         filename = hashlib.sha1(rel_filepath).hexdigest()
         image_data_encoded = base64.b64encode(image_data)
@@ -128,15 +128,15 @@ class MediaApi(ma.api.base_class.Api):
 
         return cpife
 
-    def create(self, product_id, rel_filepath, label_text, for_types, 
+    def create(self, product_id, rel_filepath, label_text, for_types,
                position=0):
-        """This "create" call also supports removing and, apparently, multiple 
-        files of different types, but the parameters are in conflict with each 
-        other and generally don't make sense. We can add different methods for 
+        """This "create" call also supports removing and, apparently, multiple
+        files of different types, but the parameters are in conflict with each
+        other and generally don't make sense. We can add different methods for
         additional use-cases later.
         """
 
-        _LOGGER.info("Uploading image [%s] for product with ID [%d].", 
+        _LOGGER.info("Uploading image [%s] for product with ID [%d].",
                      rel_filepath, product_id)
 
         cpife = self.__build_image_entity(rel_filepath)
@@ -159,7 +159,7 @@ class MediaApi(ma.api.base_class.Api):
 
         upload_rel_filepath = \
             self.magento.catalog_product_attribute_media.create(
-                product_id, 
+                product_id,
                 cpamce_dict)
 
         return upload_rel_filepath
