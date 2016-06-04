@@ -61,15 +61,17 @@ class MediaApi(ma.api.base_class.Api):
         l = self.magento.catalog_product_attribute_media.list(product_sku)
         return l
 
-    def __get_image_data(self, rel_filepath):
+    def __get_image_data(self, image_filepath, is_relative=True):
         """Acquire the image data. Accomodate both local and remote requests.
         """
 
-        replacements = {
-            'rel_filepath': rel_filepath,
-        }
-
-        url = self.__image_url_template % replacements
+        if is_relative is True and self.__image_url_template is not None:
+            replacements = {
+                'rel_filepath': image_filepath,
+            }
+            url = self.__image_url_template % replacements
+        else:
+            url = image_filepath
 
         local_uri_prefix = 'file://'
         len_ = len(local_uri_prefix)
@@ -80,7 +82,7 @@ class MediaApi(ma.api.base_class.Api):
                 os.path.exists(path) is True, \
                 "Local image download path does not exist: " + path
 
-#            _LOGGER.info("Reading image [%s] from local: [%s]", rel_filepath, filepath)
+#            _LOGGER.info("Reading image [%s] from local: [%s]", image_filepath, filepath)
 
             try:
                 with open(filepath, 'rb') as f:
@@ -91,7 +93,7 @@ class MediaApi(ma.api.base_class.Api):
             if data is None:
                 raise ImageAcquisitionFailError("Could not copy image: [{0}]".format(filepath))
         else:
-#            _LOGGER.info("Downloading product image [%s]: [%s]", rel_filepath, url)
+#            _LOGGER.info("Downloading product image [%s]: [%s]", image_filepath, url)
 
             r = requests.get(url=url, stream=True)
 
@@ -107,16 +109,16 @@ class MediaApi(ma.api.base_class.Api):
 
         return data
 
-    def __build_image_entity(self, rel_filepath):
-        image_data = self.__get_image_data(rel_filepath)
-        pivot = rel_filepath.rfind('.')
-        extension = rel_filepath[pivot + 1:].lower()
+    def __build_image_entity(self, image_filepath, is_relative=True):
+        image_data = self.__get_image_data(image_filepath, is_relative)
+        pivot = image_filepath.rfind('.')
+        extension = image_filepath[pivot + 1:].lower()
         mime_type = \
             ma.config.general.FILE_EXTENSION_TO_MIMETYPE_MAPPING[extension]
 
         # We translate what might potentially be file-paths into an opaque
         # string.
-        filename = hashlib.sha1(rel_filepath).hexdigest()
+        filename = hashlib.sha1(image_filepath).hexdigest()
         image_data_encoded = base64.b64encode(image_data)
 
         cpife = \
@@ -128,8 +130,8 @@ class MediaApi(ma.api.base_class.Api):
 
         return cpife
 
-    def create(self, product_id, rel_filepath, label_text, for_types,
-               position=0):
+    def create(self, product_id, image_filepath, label_text, for_types,
+               position=0, is_relative=True):
         """This "create" call also supports removing and, apparently, multiple
         files of different types, but the parameters are in conflict with each
         other and generally don't make sense. We can add different methods for
@@ -137,9 +139,9 @@ class MediaApi(ma.api.base_class.Api):
         """
 
         _LOGGER.info("Uploading image [%s] for product with ID [%d].",
-                     rel_filepath, product_id)
+                     image_filepath, product_id)
 
-        cpife = self.__build_image_entity(rel_filepath)
+        cpife = self.__build_image_entity(image_filepath, is_relative)
         cpife_dict = ma.utility.get_dict_from_named_tuple(cpife)
 
         do_exclude = False
@@ -164,5 +166,40 @@ class MediaApi(ma.api.base_class.Api):
 
         return upload_rel_filepath
 
+    def update(self, product_id, image_filepath, mage_file_path, label_text=None, for_types=None,
+               position=0, is_relative=True):
+
+        _LOGGER.info("Media Update: Uploading image [%s] for product with ID [%d].",
+                     image_filepath, product_id)
+
+        cpife = self.__build_image_entity(image_filepath, is_relative)
+        cpife_dict = ma.utility.get_dict_from_named_tuple(cpife)
+
+        do_exclude = False
+        do_remove = False
+
+        cpamce = \
+            ma.entities.product.build_catalog_product_attribute_media_create_entity(
+                    file=cpife_dict,
+                    label=label_text,
+                    position=str(position),
+                    types=for_types,
+                    exclude=str(int(do_exclude)),
+                    remove=str(int(do_remove))
+                )
+
+        cpamce_dict = ma.utility.get_dict_from_named_tuple(cpamce)
+
+        is_updated = \
+            self.magento.catalog_product_attribute_media.update(
+                product_id,
+                mage_file_path,
+                cpamce_dict)
+
+        return is_updated
+
     def remove_with_sku(self, sku, rel_filepath):
         return self.magento.catalog_product_attribute_media.remove(sku, rel_filepath, 'sku')
+
+    def remove_with_id(self, product_id, rel_filepath):
+        return self.magento.catalog_product_attribute_media.remove(product_id, rel_filepath)
