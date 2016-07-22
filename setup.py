@@ -36,5 +36,6 @@ setuptools.setup(
     },
     scripts=[
         'ma/resources/scripts/ma_help',
+        'ma/resources/scripts/ma_truncate_products',
     ],
 )
