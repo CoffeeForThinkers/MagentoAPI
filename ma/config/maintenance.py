@@ -1,7 +1,7 @@
 import os
 import logging
 
-from ma.config.magento import SCHEME, HOSTNAME
+from ma.config.magento import SCHEME, HOSTNAME, PORT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ MAGENTO_INDEX_TYPES = {
 }
 
 # Magento Maintenance URLs
-_DOMAIN = SCHEME + '://' + HOSTNAME
+_DOMAIN = SCHEME + '://' + HOSTNAME + ':' + PORT
 MAGENTO_MAINTENANCE_URL = {
     'cache': _DOMAIN + '/utility/cache/refresh/type/{0}/{1}',
     'index': _DOMAIN + '/utility/reindex/index/process/{0}/{1}'
