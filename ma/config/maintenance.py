@@ -20,7 +20,7 @@ MAGENTO_CACHE_TYPES = {
     'eav': 'Entity types declaration cache.',
     'config_api': 'Web Services definition files (api.xml).',
     'config_api2': 'Web Services definition files (api2.xml).',
-    'aitsys': 'Extended class-rewriting subsystem.',
+    'amfpc': 'Full Page Cache for frontend pages.',
 }
 
 # Magento Index Types
