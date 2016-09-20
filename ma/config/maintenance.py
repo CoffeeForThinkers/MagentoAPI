@@ -38,7 +38,7 @@ MAGENTO_INDEX_TYPES = {
 }
 
 # Magento Maintenance URLs
-_DOMAIN = SCHEME + '://' + HOSTNAME + ':' + PORT
+_DOMAIN = SCHEME + '://' + HOSTNAME + ':' + str(PORT)
 MAGENTO_MAINTENANCE_URL = {
     'cache': _DOMAIN + '/utility/cache/refresh/type/{0}/{1}',
     'index': _DOMAIN + '/utility/reindex/index/process/{0}/{1}'
